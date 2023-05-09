@@ -1,0 +1,29 @@
+yamlCopy codename: Dependabot Scraper
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+  uses: actions/setup-python@v2
+  with:
+    python-version: '3.x'
+  - name: Install dependencies
+  run: pip install requests beautifulsoup4
+    - name: Scrape Dependabot page
+  run: python scrape_dependabot.py
+    - name: Commit changes
+  run: |
+    git config --global user.email "actions@github.com"
+    git config --global user.name "GitHub Actions"
+    git commit -a -m "Update Dependabot content"
+    - name: Push changes
+  uses: ad-m/github-push-action@master
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
